@@ -14,6 +14,8 @@ $(document).ready(function () {
 
 
 function CreateLineForTable (line){
+    if (line === null)
+        return null;
     if (line.constructor === Array)
         line.map(CreateLineForTable);
     else {

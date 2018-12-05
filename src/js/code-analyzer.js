@@ -68,7 +68,8 @@ function CreateIfLine(ifExpr) {
             ifExpr.alternate.type = 'elseIfStatement';
         alternate = CreateNewLineForTabele(ifExpr.alternate);
     }
-
+    if (alternate === null || alternate === undefined)
+        return [{lineNum:lineNum,type:type,condition:condition},consequent];
     return [{lineNum:lineNum,type:type,condition:condition},consequent,alternate];
 }
 

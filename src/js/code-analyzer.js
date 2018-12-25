@@ -145,50 +145,140 @@ function CreateReturnLine(returnExpr) {
     return {lineNum:lineNum,type:type,value:value};
 }
 
+function typeVars (body){
+    switch (body.type) {
+    case 'VariableDeclaration':             //let declaration
+        return CreateletDecLine(body);
+
+    case 'AssignmentExpression':
+        return CreateAssignmentLine(body);
+
+    case 'UpdateExpression':
+        return CreateUpdateExpression(body);
+    default:
+        return undefined;
+    }
+}
+
+function typeCond(body) {
+    ////---------------------   conditions    ------------------
+    switch (body.type) {
+    case 'IfStatement':
+        return CreateIfLine(body);
+    case  'elseIfStatement':
+        return CreateElseIfLine(body);
+    default:
+        return undefined;
+    }
+}
+
+function typeLoop(body) {
+    switch (body.type) {
+    case 'ForStatement':
+        return CreateForLine (body);
+
+    case 'DoWhileStatement':
+        return CreateDoWhileLine (body);
+
+    case 'WhileStatement':
+        return CreateWhileLine (body);
+    default:
+        return undefined;
+    }
+}
+
+function typeFunc(body) {
+    ////---------------------   conditions    ------------------
+    switch (body.type) {
+    case 'FunctionDeclaration':
+        return CreateFunctionDeclarationLine (body);
+
+    case 'ArrowFunctionExpression':
+        return CreateArrowFunctionLine (body);
+
+    case 'ReturnStatement':  /// return statment
+        return CreateReturnLine (body);
+
+    default:
+        return undefined;
+    }
+}
+
+function compFixer (body){
+    let ans = typeVars(body);
+    if (ans === undefined)
+        ans = typeCond(body);
+    if (ans === undefined)
+        ans = typeLoop(body);
+    if (ans === undefined)
+        ans = typeFunc(body);
+
+    return ans;
+}
+
 function CreateNewLineForTabele (body){
     if (body.type === 'ExpressionStatement')
         body = body.expression;
     else if (body.type === 'BlockStatement')
         return body.body.map(CreateNewLineForTabele);
 
-    switch (body.type) {
-        case 'VariableDeclaration':             //let declaration
-            return CreateletDecLine (body);
+    return compFixer(body);
 
-        case 'AssignmentExpression':
-            return CreateAssignmentLine (body);
-
-        case 'UpdateExpression':
-            return CreateUpdateExpression (body);
-
-            ////---------------------   conditions    ------------------
-        case 'IfStatement':
-            return CreateIfLine (body);
-
-        case  'elseIfStatement':
-            return CreateElseIfLine (body);
-
-            //-------------  loops  ----------
-        case 'ForStatement':
-            return CreateForLine (body);
-
-        case 'DoWhileStatement':
-            return CreateDoWhileLine (body);
-
-        case 'WhileStatement':
-            return CreateWhileLine (body);
-
-            ///----------- functions  ------------
-        case 'FunctionDeclaration':
-            return CreateFunctionDeclarationLine (body);
-
-        case 'ArrowFunctionExpression':
-            return CreateArrowFunctionLine (body);
-
-        case 'ReturnStatement':  /// return statment
-            return CreateReturnLine (body);
-
-        default:
-            return undefined;//'not implemented type ' + body.type;
-    }
 }
+
+/*let functions = [];
+functions['VariableDeclaration'] = CreateletDecLine (body);
+functions['AssignmentExpression'] = CreateAssignmentLine (body);
+functions['UpdateExpression'] = CreateUpdateExpression (body);
+functions['IfStatement'] = CreateIfLine (body);
+functions['elseIfStatement'] =CreateElseIfLine (body);
+functions['ForStatement'] = CreateForLine (body);
+functions['DoWhileStatement'] = CreateDoWhileLine (body);
+functions['WhileStatement'] = CreateWhileLine (body);
+functions['FunctionDeclaration'] = CreateFunctionDeclarationLine (body);
+functions['ArrowFunctionExpression'] = CreateArrowFunctionLine (body);
+functions['ReturnStatement'] = CreateReturnLine (body);
+
+return functions[body.type];*/
+
+/*
+    switch (body.type) {
+    case 'VariableDeclaration':             //let declaration
+        return CreateletDecLine (body);
+
+    case 'AssignmentExpression':
+        return CreateAssignmentLine (body);
+
+    case 'UpdateExpression':
+        return CreateUpdateExpression (body);
+
+        ////---------------------   conditions    ------------------
+    case 'IfStatement':
+        return CreateIfLine (body);
+
+    case  'elseIfStatement':
+        return CreateElseIfLine (body);
+
+        //-------------  loops  ----------
+    case 'ForStatement':
+        return CreateForLine (body);
+
+    case 'DoWhileStatement':
+        return CreateDoWhileLine (body);
+
+    case 'WhileStatement':
+        return CreateWhileLine (body);
+
+        ///----------- functions  ------------
+    case 'FunctionDeclaration':
+        return CreateFunctionDeclarationLine (body);
+
+    case 'ArrowFunctionExpression':
+        return CreateArrowFunctionLine (body);
+
+    case 'ReturnStatement':  /// return statment
+        return CreateReturnLine (body);
+
+    default:
+        return undefined;//'not implemented type ' + body.type;
+    }*/

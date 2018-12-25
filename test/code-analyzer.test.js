@@ -61,14 +61,14 @@ describe('The javascript parser', () => {
     it('if expression 1', () => {
         assert.deepEqual(
             (parseCode('if (x===3)\n 1+1\n else\n x'))[0],
-            [{lineNum:1, type:'if statement',condition:'x===3'},undefined,undefined]
+            [{lineNum:1, type:'if statement',condition:'x===3'},undefined]
         );
     });
 
     it('if expression 2', () => {
         assert.deepEqual(
             (parseCode('if (x===3)\n x ++\n else\n x'))[0],
-            [{lineNum:1, type:'if statement',condition:'x===3'},{lineNum:2, type:'assignment update expression',name:'x',value:'x ++'},undefined]
+            [{lineNum:1, type:'if statement',condition:'x===3'},{lineNum:2, type:'assignment update expression',name:'x',value:'x ++'}]
         );
     });
 
@@ -82,7 +82,7 @@ describe('The javascript parser', () => {
     it('if expression 4', () => {
         assert.deepEqual(
             (parseCode('if (x===3)\n x ++;'))[0],
-            [{lineNum:1, type:'if statement',condition:'x===3'},{lineNum:2, type:'assignment update expression',name:'x',value:'x ++'},undefined]
+            [{lineNum:1, type:'if statement',condition:'x===3'},{lineNum:2, type:'assignment update expression',name:'x',value:'x ++'}]
         );
     });
 
